@@ -21,6 +21,7 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 #include "ByteStreamFileSource.hh"
 #include "InputFile.hh"
 #include "GroupsockHelper.hh"
+#include "hwdecode.h"
 
 ////////// ByteStreamFileSource //////////
 
@@ -28,6 +29,7 @@ ByteStreamFileSource*
 ByteStreamFileSource::createNew(UsageEnvironment& env, char const* fileName,
 				unsigned preferredFrameSize,
 				unsigned playTimePerFrame) {
+	printf("[%s:%d:%s] \n", __FILE__, __LINE__, __func__);
   FILE* fid = OpenInputFile(env, fileName);
   if (fid == NULL) return NULL;
 
@@ -42,6 +44,7 @@ ByteStreamFileSource*
 ByteStreamFileSource::createNew(UsageEnvironment& env, FILE* fid,
 				unsigned preferredFrameSize,
 				unsigned playTimePerFrame) {
+	printf("[%s:%d:%s] \n", __FILE__, __LINE__, __func__);
   if (fid == NULL) return NULL;
 
   ByteStreamFileSource* newSource = new ByteStreamFileSource(env, fid, preferredFrameSize, playTimePerFrame);
@@ -51,6 +54,7 @@ ByteStreamFileSource::createNew(UsageEnvironment& env, FILE* fid,
 }
 
 void ByteStreamFileSource::seekToByteAbsolute(u_int64_t byteNumber, u_int64_t numBytesToStream) {
+	printf("[%s:%d:%s] \n", __FILE__, __LINE__, __func__);
   SeekFile64(fFid, (int64_t)byteNumber, SEEK_SET);
 
   fNumBytesToStream = numBytesToStream;
@@ -58,6 +62,7 @@ void ByteStreamFileSource::seekToByteAbsolute(u_int64_t byteNumber, u_int64_t nu
 }
 
 void ByteStreamFileSource::seekToByteRelative(int64_t offset, u_int64_t numBytesToStream) {
+	printf("[%s:%d:%s] \n", __FILE__, __LINE__, __func__);
   SeekFile64(fFid, offset, SEEK_CUR);
 
   fNumBytesToStream = numBytesToStream;
@@ -65,6 +70,7 @@ void ByteStreamFileSource::seekToByteRelative(int64_t offset, u_int64_t numBytes
 }
 
 void ByteStreamFileSource::seekToEnd() {
+	printf("[%s:%d:%s] \n", __FILE__, __LINE__, __func__);
   SeekFile64(fFid, 0, SEEK_END);
 }
 
@@ -74,15 +80,17 @@ ByteStreamFileSource::ByteStreamFileSource(UsageEnvironment& env, FILE* fid,
   : FramedFileSource(env, fid), fFileSize(0), fPreferredFrameSize(preferredFrameSize),
     fPlayTimePerFrame(playTimePerFrame), fLastPlayTime(0),
     fHaveStartedReading(False), fLimitNumBytesToStream(False), fNumBytesToStream(0) {
+	printf("[%s:%d:%s] \n", __FILE__, __LINE__, __func__);
 #ifndef READ_FROM_FILES_SYNCHRONOUSLY
   makeSocketNonBlocking(fileno(fFid));
 #endif
 
   // Test whether the file is seekable
-  fFidIsSeekable = FileIsSeekable(fFid);
+  fFidIsSeekable = false;//FileIsSeekable(fFid);
 }
 
 ByteStreamFileSource::~ByteStreamFileSource() {
+	printf("[%s:%d:%s] \n", __FILE__, __LINE__, __func__);
   if (fFid == NULL) return;
 
 #ifndef READ_FROM_FILES_SYNCHRONOUSLY
@@ -93,6 +101,7 @@ ByteStreamFileSource::~ByteStreamFileSource() {
 }
 
 void ByteStreamFileSource::doGetNextFrame() {
+	printf("[%s:%d:%s] \n", __FILE__, __LINE__, __func__);
   if (feof(fFid) || ferror(fFid) || (fLimitNumBytesToStream && fNumBytesToStream == 0)) {
     handleClosure();
     return;
@@ -111,6 +120,7 @@ void ByteStreamFileSource::doGetNextFrame() {
 }
 
 void ByteStreamFileSource::doStopGettingFrames() {
+	printf("[%s:%d:%s] \n", __FILE__, __LINE__, __func__);
   envir().taskScheduler().unscheduleDelayedTask(nextTask());
 #ifndef READ_FROM_FILES_SYNCHRONOUSLY
   envir().taskScheduler().turnOffBackgroundReadHandling(fileno(fFid));
@@ -119,7 +129,8 @@ void ByteStreamFileSource::doStopGettingFrames() {
 }
 
 void ByteStreamFileSource::fileReadableHandler(ByteStreamFileSource* source, int /*mask*/) {
-  if (!source->isCurrentlyAwaitingData()) {
+	printf("[%s:%d:%s] \n", __FILE__, __LINE__, __func__);
+   if (!source->isCurrentlyAwaitingData()) {
     source->doStopGettingFrames(); // we're not ready for the data yet
     return;
   }
@@ -127,7 +138,7 @@ void ByteStreamFileSource::fileReadableHandler(ByteStreamFileSource* source, int
 }
 
 void ByteStreamFileSource::doReadFromFile() {
-  // Try to read as many bytes as will fit in the buffer provided (or "fPreferredFrameSize" if less)
+   // Try to read as many bytes as will fit in the buffer provided (or "fPreferredFrameSize" if less)
   if (fLimitNumBytesToStream && fNumBytesToStream < (u_int64_t)fMaxSize) {
     fMaxSize = (unsigned)fNumBytesToStream;
   }
@@ -135,7 +146,10 @@ void ByteStreamFileSource::doReadFromFile() {
     fMaxSize = fPreferredFrameSize;
   }
 #ifdef READ_FROM_FILES_SYNCHRONOUSLY
-  fFrameSize = fread(fTo, 1, fMaxSize, fFid);
+  //fFrameSize = fread(fTo, 1, fMaxSize, fFid);
+	 
+  //¶ÁÈ¡
+  fFrameSize = HwDecode::read264Stream(fTo, fMaxSize);
 #else
   if (fFidIsSeekable) {
     fFrameSize = fread(fTo, 1, fMaxSize, fFid);
@@ -145,7 +159,8 @@ void ByteStreamFileSource::doReadFromFile() {
   }
 #endif
   if (fFrameSize == 0) {
-    handleClosure();
+    //handleClosure();
+	  goto again;
     return;
   }
   fNumBytesToStream -= fFrameSize;
@@ -173,6 +188,7 @@ void ByteStreamFileSource::doReadFromFile() {
 
   // Inform the reader that he has data:
 #ifdef READ_FROM_FILES_SYNCHRONOUSLY
+  again:
   // To avoid possible infinite recursion, we need to return to the event loop to do this:
   nextTask() = envir().taskScheduler().scheduleDelayedTask(0,
 				(TaskFunc*)FramedSource::afterGetting, this);

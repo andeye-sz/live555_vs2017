@@ -69,7 +69,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LibraryPath>../Debug;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -123,10 +125,15 @@
   <ItemGroup>
     <ClCompile Include="DynamicRTSPServer.cpp" />
     <ClCompile Include="live555MediaServer.cpp" />
-    <ClCompile Include="testH264VideoStreamer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="defines.h" />
     <ClInclude Include="DynamicRTSPServer.hh" />
+    <ClInclude Include="misc.h" />
+    <ClInclude Include="ScrFrameSource.h" />
+    <ClInclude Include="ScrH264Encoder.h" />
+    <ClInclude Include="ScrMediaSubsession.h" />
+    <ClInclude Include="ScrRTSPServer.h" />
     <ClInclude Include="version.hh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

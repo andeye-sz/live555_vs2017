@@ -311,12 +311,14 @@
     <ClCompile Include="ByteStreamFileSource.cpp" />
     <ClCompile Include="ByteStreamMemoryBufferSource.cpp" />
     <ClCompile Include="ByteStreamMultiFileSource.cpp" />
+    <ClCompile Include="crossthread.c" />
     <ClCompile Include="DeviceSource.cpp" />
     <ClCompile Include="DigestAuthentication.cpp" />
     <ClCompile Include="DVVideoFileServerMediaSubsession.cpp" />
     <ClCompile Include="DVVideoRTPSink.cpp" />
     <ClCompile Include="DVVideoRTPSource.cpp" />
     <ClCompile Include="DVVideoStreamFramer.cpp" />
+    <ClCompile Include="DynamicRTSPServer.cpp" />
     <ClCompile Include="EBMLNumber.cpp" />
     <ClCompile Include="FileServerMediaSubsession.cpp" />
     <ClCompile Include="FileSink.cpp" />
@@ -347,10 +349,12 @@
     <ClCompile Include="H265VideoRTPSource.cpp" />
     <ClCompile Include="H265VideoStreamDiscreteFramer.cpp" />
     <ClCompile Include="H265VideoStreamFramer.cpp" />
+    <ClCompile Include="hwdecode.cpp" />
     <ClCompile Include="InputFile.cpp" />
     <ClCompile Include="JPEGVideoRTPSink.cpp" />
     <ClCompile Include="JPEGVideoRTPSource.cpp" />
     <ClCompile Include="JPEGVideoSource.cpp" />
+    <ClCompile Include="live555MediaServer.cpp" />
     <ClCompile Include="Locale.cpp" />
     <ClCompile Include="MatroskaDemuxedTrack.cpp" />
     <ClCompile Include="MatroskaFile.cpp" />
@@ -426,6 +430,7 @@
     <ClCompile Include="QuickTimeGenericRTPSource.cpp" />
     <ClCompile Include="RawVideoRTPSink.cpp" />
     <ClCompile Include="RawVideoRTPSource.cpp" />
+    <ClCompile Include="ringbuf.cpp" />
     <ClCompile Include="RTCP.cpp" />
     <ClCompile Include="rtcp_from_spec.c" />
     <ClCompile Include="RTPInterface.cpp" />
@@ -445,6 +450,7 @@
     <ClCompile Include="StreamReplicator.cpp" />
     <ClCompile Include="T140TextRTPSink.cpp" />
     <ClCompile Include="TCPStreamSink.cpp" />
+    <ClCompile Include="testH264VideoStreamer.cpp" />
     <ClCompile Include="TextRTPSink.cpp" />
     <ClCompile Include="TheoraVideoRTPSink.cpp" />
     <ClCompile Include="TheoraVideoRTPSource.cpp" />

@@ -1034,5 +1034,23 @@
     <ClCompile Include="WAVAudioFileSource.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ringbuf.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="hwdecode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="crossthread.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="testH264VideoStreamer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="live555MediaServer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicRTSPServer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

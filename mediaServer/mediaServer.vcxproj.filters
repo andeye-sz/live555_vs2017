@@ -21,16 +21,31 @@
     <ClCompile Include="live555MediaServer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="testH264VideoStreamer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DynamicRTSPServer.hh">
-      <Filter>源文件</Filter>
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="defines.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="misc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ScrH264Encoder.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ScrFrameSource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ScrMediaSubsession.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ScrRTSPServer.h">
+      <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="version.hh">
-      <Filter>源文件</Filter>
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
