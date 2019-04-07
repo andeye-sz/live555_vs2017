@@ -799,7 +799,7 @@ static void usleep(unsigned int usec)
 	//CloseHandle(timer);
 }
 
-int main(int argc, char *argv[])
+int mainxx(int argc, char *argv[])
 {
 	StartRtspServer((char*)"xxx", 8554);
 	while (1)
